@@ -1,16 +1,17 @@
 <template>
-  <form submit.prevent="submitForm">
-    <div class="form-control">
+  <form @submit.prevent="submitForm">
+    <div class="form-control" :class="{invalid: usernameValidity === 'invalid'}">
       <label for="user-name">Your Name</label>
-      <input id="user-name" name="user-name" type="text" v-model="userName" />
+      <input id="user-name" name="user-name" type="text" v-model.trim="userName" @blur="validateInput" />
+      <p v-if="usernameValidity === 'invalid'">please enter a valid name!</p>
     </div>
     <div class="form-control">
       <label for="age">Your Age (Years)</label>
-      <input id="age" name="age" type="number" />
+      <input id="age" name="age" type="number" v-model="userAge" ref="ageInput"/>
     </div>
     <div class="form-control">
       <label for="referrer">How did you hear about us?</label>
-      <select id="referrer" name="referrer">
+      <select id="referrer" name="referrer" v-model="referral">
         <option value="google">Google</option>
         <option value="wom">Word of mouth</option>
         <option value="newspaper">Newspaper</option>
@@ -19,32 +20,36 @@
     <div class="form-control">
       <h2>What are you interested in?</h2>
       <div>
-        <input id="interest-news" name="interest" type="checkbox" />
+        <input id="interest-news" name="interest" value="news" type="checkbox" v-model="interest" />
         <label for="interest-news">News</label>
       </div>
       <div>
-        <input id="interest-tutorials" name="interest" type="checkbox" />
+        <input id="interest-tutorials" name="interest" value="tutorials" type="checkbox" v-model="interest" />
         <label for="interest-tutorials">Tutorials</label>
       </div>
       <div>
-        <input id="interest-nothing" name="interest" type="checkbox" />
+        <input id="interest-nothing" name="interest" value="nothings" type="checkbox" v-model="interest" />
         <label for="interest-nothing">Nothing</label>
       </div>
     </div>
     <div class="form-control">
       <h2>How do you learn?</h2>
       <div>
-        <input id="how-video" name="how" type="radio" />
+        <input id="how-video" name="how" value="video" type="radio" v-model="how" />
         <label for="how-video">Video Courses</label>
       </div>
       <div>
-        <input id="how-blogs" name="how" type="radio" />
+        <input id="how-blogs" name="how" value="blog" type="radio" v-model="how"/>
         <label for="how-blogs">Blogs</label>
       </div>
       <div>
-        <input id="how-other" name="how" type="radio" />
+        <input id="how-other" name="how" value="other" type="radio" v-model="how"/>
         <label for="how-other">Other</label>
       </div>
+    </div>
+    <div class="form-control">
+      <input type="checkbox" id="confirm-terms" name="confirm-terms" v-model="confirm" />
+      <label for="confirm-terms">Agree nto terms of use?</label>
     </div>
     <div>
       <button>Save Data</button>
@@ -56,13 +61,41 @@
 export default {
   data() {
     return {
-      userName: ""
+      userName: "",
+      userAge: null,
+      referral: '',
+      interest: [],
+      how: '',
+      confirm: false,
+      usernameValidity: 'pending'
     }
   },
   methods: {
     submitForm(){
       console.log('username: ' + this.userName);
-      this.userName = ''
+      this.userName = '',
+      console.log('age is: ')
+      console.log(this.userAge + 5)
+      console.log(this.$refs.ageInput.value + 5)
+      this.userAge = null
+      console.log('Referral is ' + this.referral)
+      this.referral = "wom"
+      console.log('checkboxes')
+      console.log(this.interest)
+      console.log('Radio buttons')
+      console.log(this.how)
+      this.interest = []
+      this.how = null
+      console.log('confirmed?')
+      console.log(this.confirm)
+      this.confirm = false
+    },
+    validateInput(){
+      if (this.userName === '') {
+        this.usernameValidity = 'invalid'
+      } else {
+        this.usernameValidity = 'valid';
+      }
     }
   }
 }
@@ -80,6 +113,17 @@ form {
 
 .form-control {
   margin: 0.5rem 0;
+}
+
+.form-control.invalid input {
+  border-color: palevioletred; 
+}
+
+.form-control.invalid label {
+  color: palevioletred; 
+}
+.form-control.invalid p {
+  color: palevioletred; 
 }
 
 label {
