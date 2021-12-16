@@ -48,11 +48,11 @@
       </div>
     </div>
     <div>
-      <RatingControl></RatingControl>
+      <RatingControl v-model="rating"></RatingControl>
     </div>
     <div class="form-control">
       <input type="checkbox" id="confirm-terms" name="confirm-terms" v-model="confirm" />
-      <label for="confirm-terms">Agree nto terms of use?</label>
+      <label for="confirm-terms">Agree to terms of use?</label>
     </div>
     <div>
       <button>Save Data</button>
@@ -74,6 +74,7 @@ export default {
       interest: [],
       how: '',
       confirm: false,
+      rating: null,
       usernameValidity: 'pending'
     }
   },
@@ -96,6 +97,9 @@ export default {
       console.log('confirmed?')
       console.log(this.confirm)
       this.confirm = false
+      console.log('Rating')
+      console.log(this.rating)
+      this.rating = null
     },
     validateInput(){
       if (this.userName === '') {
